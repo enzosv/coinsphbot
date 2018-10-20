@@ -24,7 +24,8 @@
      :ticker ticker
      :new-price new-price
      :previous-price previous-price
-     :price-difference price-difference}))
+     :price-difference price-difference
+     :should-send? (fn [dif-limit] (> (abs (force price-difference)) dif-limit))}))
 
 (defn -main [& args]
   (let [path-to-previous (:file-path config)
@@ -35,9 +36,9 @@
         dif-limit (:dif-limit config)]
     (log/info "waiting for new prices to load...")
     (when (or
-           (> (abs (force (:price-difference btc))) dif-limit)
-           (> (abs (force (:price-difference eth))) dif-limit)
-           (> (abs (force (:price-difference bch))) dif-limit))
+           ((:should-send? btc) dif-limit)
+           ((:should-send? eth) dif-limit)
+           ((:should-send? bch) dif-limit))
       (storer/save-coins {(:keyword btc) @(:new-price btc)
                           (:keyword eth) @(:new-price eth)
                           (:keyword bch) @(:new-price bch)}
