@@ -12,3 +12,4 @@ pom.xml.asc
 /resources/dev_config.edn
 /resources/prod_config.edn
 .DS_STORE
+old.edn
