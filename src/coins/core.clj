@@ -13,8 +13,9 @@
 (defn- abs [n] (max n (- n)))
 
 (defn coin
-  [keyword ticker loaded-previous-prices]
-  (let [new-price (cps/fetch-new-price ticker)
+  [keyword loaded-previous-prices]
+  (let [ticker (clojure.string/upper-case (name keyword))
+        new-price (cps/fetch-new-price ticker)
         ;; Lookup price from previous using keyword. Default to 0.
         previous-price (or (keyword loaded-previous-prices) 0)
         ;; Async compute diff. Default to previous-price after 1000ms
@@ -28,9 +29,9 @@
 (defn -main [& args]
   (let [path-to-previous (:file-path config)
         loaded-previous-prices (storer/load-previous-prices path-to-previous)
-        bch (coin :bch "BCH" loaded-previous-prices)
-        btc (coin :btc "BTC" loaded-previous-prices)
-        eth (coin :eth "ETH" loaded-previous-prices)
+        bch (coin :bch loaded-previous-prices)
+        btc (coin :btc loaded-previous-prices)
+        eth (coin :eth loaded-previous-prices)
         dif-limit (:dif-limit config)]
     (log/info "waiting for new prices to load...")
     (when (or
