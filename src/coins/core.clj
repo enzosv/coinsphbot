@@ -25,7 +25,7 @@
      :previous-price previous-price
      :price-difference price-difference}))
 
-(defn -main []
+(defn -main [& args]
   (let [path-to-previous (:file-path config)
         loaded-previous-prices (storer/load-previous-prices path-to-previous)
         bch (coin :bch "BCH" loaded-previous-prices)
