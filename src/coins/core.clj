@@ -25,7 +25,10 @@
      :new-price new-price
      :previous-price previous-price
      :price-difference price-difference
-     :should-send? (fn [dif-limit] (> (abs (force price-difference)) dif-limit))}))
+     :should-send? (fn [dif-limit] (> (abs (force price-difference)) dif-limit))
+     :message (delay (messenger/construct-message
+                      new-price
+                      price-difference))}))
 
 (defn -main [& args]
   (let [path-to-previous (:file-path config)
@@ -45,20 +48,17 @@
                          path-to-previous)
       (let [sender (:bot-id config)]
         (messenger/send-message
-         (messenger/message-for btc true)
+         (force (:message btc))
          sender
          (:btc-channel-id config))
         (messenger/send-message
-         (format "%s\n%s\n%s"
-                 (messenger/message-for
-                  btc
-                  false)
-                 (messenger/message-for
-                  bch
-                  false)
-                 (messenger/message-for
-                  eth
-                  false))
+         (format "%s:%s\n%s:%s\n%s:%s"
+                 (:ticker btc)
+                 (force (:message btc))
+                 (:ticker bch)
+                 (force (:message bch))
+                 (:ticker eth)
+                 (force (:message eth)))
          sender
          (:all-channel-id config)))))
   nil)

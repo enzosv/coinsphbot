@@ -2,18 +2,13 @@
   (:require [clojure.tools.logging :as log]
             [clj-http.client :as client]))
 
-(defn message-for
-  [coin is-standalone]
-  (let [ticker (:ticker coin)
-        new @(:new-price coin)
-        dif (force (:price-difference coin))
-        prefix (if is-standalone
-                 ""
-                 (str ticker ": "))]
+(defn construct-message
+  [new-price price-difference]
+  (let [dif (force price-difference)]
     (cond
-      (> dif 0) (format "*%s₱%,d (+₱%,d)*" prefix new dif)
-      (< dif 0) (format "`%s₱%,d (-₱%,d)`" prefix new (Math/abs dif))
-      :else (format "%s₱%,d" prefix new))))
+      (> dif 0) (format "*₱%,d (+₱%,d)*" @new-price dif)
+      (< dif 0) (format "`₱%,d (-₱%,d)`" @new-price (Math/abs dif))
+      :else (format "₱%,d" new-price))))
 
 (defn send-message
   [message sender recipient]
