@@ -1,0 +1,5 @@
+{:dif-limit       1000
+ :all-channel-id  "<use https://t.me/@get_id_bot to get the id of your channel>"
+ :btc-channel-id  "<use https://t.me/@get_id_bot to get the id of your channel>"
+ :bot-id          "<create your bot and get your id with https://t.me/@BotFather>"
+ :file-path       "/path/to/old"}
