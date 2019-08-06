@@ -13,8 +13,9 @@
       :as :json
       :conn-timeout 1000}
      (fn [response]
-       (log/info "Fetched:" url)
-       (deliver new-price-promise (int (read-string (:ask (:market (:body response)))))))
+       (let [price (int (read-string (:ask (:market (:body response)))))]
+         (log/info "Fetched: " url price)
+         (deliver new-price-promise price)))
      (fn [exception]
        (log/error "Fetch fail:" url exception)
        (deliver new-price-promise exception)))

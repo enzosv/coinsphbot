@@ -5,17 +5,17 @@
 (defn construct-message
   [new-price price-difference]
   (let [dif (force price-difference)]
+    (log/info (format "constructing message: *₱%,d (+₱%,d)*" @new-price dif))
     (cond
       (> dif 0) (format "*₱%,d (+₱%,d)*" @new-price dif)
       (< dif 0) (format "`₱%,d (-₱%,d)`" @new-price (Math/abs dif))
-      :else (format "₱%,d" new-price))))
+      :else (format "₱%,d" @new-price))))
 
 (defn send-message
   [message sender recipient]
-
+  (log/info "\n\tSending:" message)
   (let
    [url (format "https://api.telegram.org/bot%s/sendMessage" sender)]
-    (log/info "\n\tSending:" message)
     (client/post
      url
      {:async? true

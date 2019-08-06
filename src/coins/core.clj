@@ -52,7 +52,7 @@
          sender
          (:btc-channel-id config))
         (messenger/send-message
-         (format "%s:%s\n%s:%s\n%s:%s"
+         (format "%s: %s\n%s: %s\n%s: %s"
                  (:ticker btc)
                  (force (:message btc))
                  (:ticker bch)
