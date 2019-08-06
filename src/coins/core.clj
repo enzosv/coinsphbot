@@ -18,8 +18,7 @@
         new-price (cps/fetch-new-price ticker)
         ;; Lookup price from previous using keyword. Default to 0.
         previous-price (or (keyword loaded-previous-prices) 0)
-        ;; Async compute diff. Default to previous-price after 1000ms
-        price-difference (delay (- (deref new-price 1000 previous-price) previous-price))]
+        price-difference (- @new-price previous-price)]
     {:keyword keyword
      :ticker ticker
      :new-price new-price
