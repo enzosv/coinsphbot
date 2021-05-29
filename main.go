@@ -142,18 +142,19 @@ func (c *CoinsResponse) filterMarkets(symbols []string) []Market {
 func constructSingleMessage(new Market, old Market, printer *msg.Printer) string {
 	dif := new.Amt - old.Amt
 	amtStr := printer.Sprintf("₱%d", int(new.Amt))
+	if dif == 0 {
+		return amtStr
+	}
 	difStr := printer.Sprintf("₱%d", int(math.Abs(dif)))
 	if new.Amt < 1000 {
 		amtStr = printer.Sprintf("₱%.2f", new.Amt)
 		difStr = printer.Sprintf("₱%.2f", math.Abs(dif))
 	}
-	if dif == 0 {
-		return amtStr
-	}
+	pctStr := printer.Sprintf("%.2f%%", 100*math.Abs(dif)/((new.Amt+old.Amt)/2))
 	if dif > 0 {
-		return printer.Sprintf("*%s (+%s)* ", amtStr, difStr)
+		return printer.Sprintf("*%s (+%s [%s])* ", amtStr, pctStr, difStr)
 	}
-	return printer.Sprintf("`%s (-%s)`", amtStr, difStr)
+	return printer.Sprintf("`%s (-%s [%s])`", amtStr, pctStr, difStr)
 }
 
 func constructCurrencyMessage(markets []Market, old []Market, symbol string) string {
